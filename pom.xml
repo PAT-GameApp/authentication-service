@@ -78,6 +78,11 @@
             <version>1.18.34</version>
             <scope>annotationProcessor</scope>
         </dependency>
+        
+        <dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
 
         <!-- DevTools -->
         <dependency>
