@@ -1,5 +1,7 @@
-package com.cognizant.authentication_service.user;
+package com.cognizant.authentication_service.service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -10,8 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
+import com.cognizant.authentication_service.entity.User;
+import com.cognizant.authentication_service.repository.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -46,12 +48,12 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
+        Collection<? extends GrantedAuthority> authorities = List
+                .of(new SimpleGrantedAuthority("ROLE_" + user.getRole()));
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                authorities
-        );
+                authorities);
     }
 }

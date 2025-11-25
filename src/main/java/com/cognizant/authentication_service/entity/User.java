@@ -1,4 +1,4 @@
-package com.cognizant.authentication_service.user;
+package com.cognizant.authentication_service.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

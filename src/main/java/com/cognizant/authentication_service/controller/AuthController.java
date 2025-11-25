@@ -1,7 +1,8 @@
-package com.cognizant.authentication_service.auth;
+package com.cognizant.authentication_service.controller;
 
-import com.cognizant.authentication_service.user.User;
-import com.cognizant.authentication_service.user.UserService;
+import java.security.Principal;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -13,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
-import java.util.Map;
+import com.cognizant.authentication_service.service.UserService;
+import com.cognizant.authentication_service.entity.User;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     private final UserService userService;
@@ -26,7 +27,8 @@ public class AuthController {
         this.userService = userService;
     }
 
-    public record RegisterRequest(String userId, String email, String password, String role) {}
+    public record RegisterRequest(String userId, String email, String password, String role) {
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
@@ -34,12 +36,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "userId", user.getUserId(),
                 "email", user.getEmail(),
-                "role", user.getRole()
-        ));
+                "role", user.getRole()));
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> me(@AuthenticationPrincipal UserDetails userDetails, Authentication authentication, Principal principal) {
+    public ResponseEntity<?> me(@AuthenticationPrincipal UserDetails userDetails, Authentication authentication,
+            Principal principal) {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -47,7 +49,6 @@ public class AuthController {
         return ResponseEntity.ok(Map.of(
                 "username", userDetails.getUsername(),
                 "authorities", userDetails.getAuthorities(),
-                "principal", principal != null ? principal.getName() : null
-        ));
+                "principal", principal != null ? principal.getName() : null));
     }
 }
