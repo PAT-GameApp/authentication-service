@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cognizant.authentication_service.dto.UserRegisterDTO;
+import com.cognizant.authentication_service.dto.UserRegisterRequestDTO;
 import com.cognizant.authentication_service.entity.User;
 import com.cognizant.authentication_service.repository.UserRepository;
 
@@ -26,7 +28,8 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(String userId, String email, String rawPassword, String role) {
+    public User registerUser(String userId, String email, String rawPassword,
+            String role) {
         User user = new User();
         user.setUserId(userId);
         user.setEmail(email);
