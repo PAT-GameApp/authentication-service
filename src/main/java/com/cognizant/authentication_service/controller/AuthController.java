@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cognizant.authentication_service.service.UserService;
+import com.cognizant.authentication_service.dto.UserRegisterRequestDTO;
 import com.cognizant.authentication_service.entity.User;
 
 @RestController
@@ -27,16 +28,10 @@ public class AuthController {
         this.userService = userService;
     }
 
-    public record RegisterRequest(String userId, String email, String password, String role) {
-    }
-
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        User user = userService.registerUser(request.userId(), request.email(), request.password(), request.role());
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                "userId", user.getUserId(),
-                "email", user.getEmail(),
-                "role", user.getRole()));
+    public ResponseEntity<?> register(@RequestBody UserRegisterRequestDTO request) {
+        User user = userService.registerUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
     @GetMapping("/me")

@@ -1,16 +1,15 @@
-package com.cognizant.authentication_service.dto;
+package com.cognizant.authentication_service.client;
 
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class UserRegisterRequestDTO {
+public class UserRegisterClientRequestDTO {
     private String userName;
     private String email;
     private String phoneNumber;
     private String role;
     private String department;
     private String officeLocation;
-    private String password;
 }
