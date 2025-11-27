@@ -44,7 +44,7 @@ public class UserService implements UserDetailsService {
                         .officeLocation(request.getDepartment())
                         .build());
         User user = User.builder()
-                .id(userServiceResponse.getUserId())
+                .userId(userServiceResponse.getUserId())
                 .email(userServiceResponse.getEmail())
                 .password(
                         passwordEncoder.encode(request.getPassword()))
@@ -54,10 +54,6 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
-    }
-
-    public Optional<User> findByUserId(String userId) {
-        return userRepository.findByUserId(userId);
     }
 
     @Override

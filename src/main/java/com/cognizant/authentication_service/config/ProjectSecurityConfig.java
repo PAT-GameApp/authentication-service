@@ -40,50 +40,49 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class ProjectSecurityConfig {
-    
+
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception{
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = 
-                        OAuth2AuthorizationServerConfigurer.authorizationServer();
-        
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer
+                .authorizationServer();
+
         http
-            .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-            .with(authorizationServerConfigurer,
-                    (authorizationServer) -> authorizationServer.oidc(Customizer.withDefaults()))
-            .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
-            .exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
-                new LoginUrlAuthenticationEntryPoint("/login"), 
-                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                )
-            );
-        
-            return http.build();
-    }
-    
-    @Bean
-    @Order(2)
-    public SecurityFilterChain defauSecurityFilterChain(HttpSecurity http) throws Exception{
-        http
-            // This chain handles API and general web endpoints (not auth-server endpoints)
-            .securityMatcher("/api/**", "/login", "/")
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests((authorize) -> authorize
-                .requestMatchers("/api/auth/register").permitAll()
-                .anyRequest().authenticated())
-            .formLogin(Customizer.withDefaults())
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
+                .with(authorizationServerConfigurer,
+                        (authorizationServer) -> authorizationServer.oidc(Customizer.withDefaults()))
+                .authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated())
+                .exceptionHandling((exceptions) -> exceptions.defaultAuthenticationEntryPointFor(
+                        new LoginUrlAuthenticationEntryPoint("/login"),
+                        new MediaTypeRequestMatcher(MediaType.TEXT_HTML)));
 
         return http.build();
     }
-    
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain defauSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                // This chain handles API and general web endpoints (not auth-server endpoints)
+                .securityMatcher("/api/**", "/login", "/")
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/api/auth/register", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .formLogin(Customizer.withDefaults())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
+        return http.build();
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    
+
     @Bean
-    public RegisteredClientRepository registeredClientRepository(){
+    public RegisteredClientRepository registeredClientRepository() {
         // Raw client secret that external clients must use
         String rawClientSecret = "my-client-secret";
 
@@ -91,58 +90,57 @@ public class ProjectSecurityConfig {
         String encodedClientSecret = passwordEncoder().encode(rawClientSecret);
 
         RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
-        .clientId("oidc-client")
-        .clientSecret(encodedClientSecret)
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .redirectUri("http://127.0.0.1:3000/callback")
-        .postLogoutRedirectUri("http://127.0.0.1:3000/")
-        .scopes(scopeConfig -> scopeConfig.addAll(List.of(OidcScopes.OPENID, "ADMIN", "USER")))
-        .scope(OidcScopes.OPENID)
-        .scope(OidcScopes.PROFILE)
-        .clientSettings(
-            ClientSettings
-            .builder()
-            .requireAuthorizationConsent(true)
-            .build())
-        .build();
-        return new InMemoryRegisteredClientRepository(oidcClient);    
+                .clientId("oidc-client")
+                .clientSecret(encodedClientSecret)
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .redirectUri("http://127.0.0.1:3000/callback")
+                .postLogoutRedirectUri("http://127.0.0.1:3000/")
+                .scopes(scopeConfig -> scopeConfig.addAll(List.of(OidcScopes.OPENID, "ADMIN", "USER")))
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .clientSettings(
+                        ClientSettings
+                                .builder()
+                                .requireAuthorizationConsent(true)
+                                .build())
+                .build();
+        return new InMemoryRegisteredClientRepository(oidcClient);
     }
-    
+
     @Bean
-    public JWKSource<SecurityContext> jwkSource(){
+    public JWKSource<SecurityContext> jwkSource() {
         KeyPair keyPair = generateRsaKey();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
         RSAKey rsaKey = new RSAKey.Builder(publicKey)
-            .privateKey(privateKey)
-            .keyID(UUID.randomUUID().toString())
-            .build();
+                .privateKey(privateKey)
+                .keyID(UUID.randomUUID().toString())
+                .build();
         JWKSet jwkSet = new JWKSet(rsaKey);
         return new ImmutableJWKSet<>(jwkSet);
     }
-    
-    public static KeyPair generateRsaKey(){
+
+    public static KeyPair generateRsaKey() {
         KeyPair keyPair;
-        try{
+        try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
             keyPairGenerator.initialize(2048);
             keyPair = keyPairGenerator.generateKeyPair();
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             throw new IllegalStateException(ex);
         }
         return keyPair;
     }
-    
+
     @Bean
-    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource){
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
     @Bean
-    public AuthorizationServerSettings authorizationServerSettings(){
+    public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
     }
 

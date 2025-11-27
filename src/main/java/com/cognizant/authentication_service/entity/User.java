@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    private Long id;
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     private String email;
