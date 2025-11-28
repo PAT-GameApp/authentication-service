@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cognizant.authentication_service.service.UserService;
 import com.cognizant.authentication_service.dto.UserRegisterRequestDTO;
+import com.cognizant.authentication_service.dto.UserRegisterResponseDTO;
 import com.cognizant.authentication_service.entity.User;
 
 @RestController
@@ -30,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegisterRequestDTO request) {
-        User user = userService.registerUser(request);
+        UserRegisterResponseDTO user = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 

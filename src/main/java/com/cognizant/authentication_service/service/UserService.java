@@ -16,6 +16,7 @@ import com.cognizant.authentication_service.client.UserRegisterClientRequestDTO;
 import com.cognizant.authentication_service.client.UserRegisterClientResponseDTO;
 import com.cognizant.authentication_service.client.UserServiceClient;
 import com.cognizant.authentication_service.dto.UserRegisterRequestDTO;
+import com.cognizant.authentication_service.dto.UserRegisterResponseDTO;
 import com.cognizant.authentication_service.entity.User;
 import com.cognizant.authentication_service.repository.UserRepository;
 
@@ -33,7 +34,8 @@ public class UserService implements UserDetailsService {
         this.userServiceFeign = userServiceFeign;
     }
 
-    public User registerUser(UserRegisterRequestDTO request) {
+    public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO request) {
+        // feign call to create user entity in user service
         UserRegisterClientResponseDTO userServiceResponse = userServiceFeign.createUser(
                 UserRegisterClientRequestDTO.builder()
                         .userName(request.getUserName())
@@ -41,7 +43,7 @@ public class UserService implements UserDetailsService {
                         .phoneNumber(request.getPhoneNumber())
                         .role(request.getRole())
                         .department(request.getDepartment())
-                        .officeLocation(request.getDepartment())
+                        .officeLocation(request.getOfficeLocation())
                         .build());
         User user = User.builder()
                 .userId(userServiceResponse.getUserId())
@@ -49,7 +51,17 @@ public class UserService implements UserDetailsService {
                 .password(
                         passwordEncoder.encode(request.getPassword()))
                 .role(userServiceResponse.getRole()).build();
-        return userRepository.save(user);
+        userRepository.save(user);
+        UserRegisterResponseDTO response = UserRegisterResponseDTO.builder()
+                .userId(userServiceResponse.getUserId())
+                .userName(userServiceResponse.getUserName())
+                .email(userServiceResponse.getEmail())
+                .phoneNumber(userServiceResponse.getPhoneNumber())
+                .role(userServiceResponse.getRole())
+                .department(userServiceResponse.getDepartment())
+                .officeLocation(userServiceResponse.getOfficeLocation())
+                .build();
+        return response;
     }
 
     public Optional<User> findByEmail(String email) {
