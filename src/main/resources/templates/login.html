@@ -1,0 +1,57 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>Login - Cognizant</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-header">
+        <h2>Welcome Back</h2>
+        <p>Please sign in to continue</p>
+      </div>
+      <form th:action="@{/login}" method="post" class="login-form">
+        <div th:if="${param.error}" class="alert alert-error">
+          Invalid email or password.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success">
+          You have been logged out.
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            autofocus
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Sign In</button>
+        </div>
+      </form>
+      <div class="login-footer">
+        <p>Cognizant game app</p>
+      </div>
+    </div>
+  </body>
+</html>
