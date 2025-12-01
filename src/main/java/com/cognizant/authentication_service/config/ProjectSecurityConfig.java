@@ -36,6 +36,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
+import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
+import com.cognizant.authentication_service.service.UserService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Configuration
 @EnableWebSecurity
@@ -148,6 +154,25 @@ public class ProjectSecurityConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder().build();
+    }
+
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> jwtTokenCustomizer(UserService userService) {
+        return (context) -> {
+            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+                context.getClaims().claims((claims) -> {
+                    if (context.getPrincipal().getPrincipal() instanceof UserDetails userDetails) {
+                        String role = userDetails.getAuthorities().stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .filter(auth -> auth.startsWith("ROLE_"))
+                                .findFirst()
+                                .map(auth -> auth.substring(5)) // Remove "ROLE_" prefix
+                                .orElse("USER");
+                        claims.put("role", role);
+                    }
+                });
+            }
+        };
     }
 
 }
