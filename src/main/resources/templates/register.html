@@ -1,0 +1,167 @@
+<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>Register - Cognizant</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-header">
+        <h2>Welcome</h2>
+        <p>Create an account to continue</p>
+      </div>
+      <form id="registerForm" class="login-form">
+        <div
+          id="errorMessage"
+          class="alert alert-error"
+          style="display: none"
+        ></div>
+        <div
+          id="successMessage"
+          class="alert alert-success"
+          style="display: none"
+        ></div>
+
+        <div class="form-group">
+          <label for="userName">Username</label>
+          <input
+            type="text"
+            id="userName"
+            name="userName"
+            placeholder="Enter your username"
+            required
+            autofocus
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <input
+            type="text"
+            id="role"
+            name="role"
+            placeholder="Enter your role"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input
+            type="text"
+            id="department"
+            name="department"
+            placeholder="Enter your department"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="officeLocation">Office Location</label>
+          <input
+            type="text"
+            id="officeLocation"
+            name="officeLocation"
+            placeholder="Enter your office location"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Register</button>
+        </div>
+      </form>
+      <script>
+        document
+          .getElementById("registerForm")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const userName = document.getElementById("userName").value;
+            const email = document.getElementById("email").value;
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const role = document.getElementById("role").value;
+            const department = document.getElementById("department").value;
+            const officeLocation =
+              document.getElementById("officeLocation").value;
+            const password = document.getElementById("password").value;
+            const errorDiv = document.getElementById("errorMessage");
+            const successDiv = document.getElementById("successMessage");
+
+            errorDiv.style.display = "none";
+            successDiv.style.display = "none";
+
+            try {
+              const response = await fetch("/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  userName,
+                  email,
+                  phoneNumber,
+                  role,
+                  department,
+                  officeLocation,
+                  password,
+                }),
+              });
+
+              if (response.ok) {
+                successDiv.textContent =
+                  "Registration successful! Redirecting to homepage...";
+                successDiv.style.display = "block";
+                setTimeout(
+                  () =>
+                    (window.location.href =
+                      '[[${@environment.getProperty("app.frontend.url")}]]'),
+                  2000,
+                );
+              } else {
+                const data = await response.json();
+                errorDiv.textContent =
+                  data.message || "Registration failed. Please try again.";
+                errorDiv.style.display = "block";
+              }
+            } catch (error) {
+              errorDiv.textContent = "An error occurred. Please try again.";
+              errorDiv.style.display = "block";
+            }
+          });
+      </script>
+      <div class="login-footer">
+        <p>Cognizant game app</p>
+      </div>
+    </div>
+  </body>
+</html>
