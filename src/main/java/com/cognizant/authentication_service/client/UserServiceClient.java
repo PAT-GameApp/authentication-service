@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "user-service", path = "/users")
 public interface UserServiceClient {
-    @PostMapping("/create_user")
+    @PostMapping()
     UserRegisterClientResponseDTO createUser(@RequestBody UserRegisterClientRequestDTO user);
 }
