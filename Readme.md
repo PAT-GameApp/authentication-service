@@ -35,7 +35,7 @@ Start the OAuth2 login process.
 
 - **Open in Browser**:
   ```
-  http://localhost:8080/oauth2/authorize?response_type=code&client_id=oidc-client&scope=openid profile&redirect_uri=http://localhost:5173/callback
+  http://localhost:8080/oauth2/authorize?response_type=code&client_id=oidc-client&scope=openid%20profile&redirect_uri=http://localhost:5173/callback
   ```
 
 ## Step 3: Login (Browser)
