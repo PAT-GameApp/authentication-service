@@ -43,7 +43,7 @@ public class UserService implements UserDetailsService {
                         .phoneNumber(request.getPhoneNumber())
                         .role(request.getRole())
                         .department(request.getDepartment())
-                        .officeLocation(request.getOfficeLocation())
+                        .locationId(request.getLocationId())
                         .build());
         User user = User.builder()
                 .userId(userServiceResponse.getUserId())
@@ -59,7 +59,7 @@ public class UserService implements UserDetailsService {
                 .phoneNumber(userServiceResponse.getPhoneNumber())
                 .role(userServiceResponse.getRole())
                 .department(userServiceResponse.getDepartment())
-                .officeLocation(userServiceResponse.getOfficeLocation())
+                .locationId(userServiceResponse.getLocationId())
                 .build();
         return response;
     }

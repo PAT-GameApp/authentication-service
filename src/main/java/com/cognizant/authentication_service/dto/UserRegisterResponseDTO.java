@@ -12,5 +12,5 @@ public class UserRegisterResponseDTO {
     private String phoneNumber;
     private String role;
     private String department;
-    private String officeLocation;
+    private Long locationId;
 }

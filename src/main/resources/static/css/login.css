@@ -19,7 +19,8 @@ body {
 }
 
 .login-header h2 {
-  color: #0033a0; /* Cognizant Blue */
+  color: #0033a0;
+  /* Cognizant Blue */
   margin-bottom: 10px;
   font-weight: 700;
 }
@@ -62,13 +63,25 @@ body {
   font-size: 14px;
 }
 
-.form-group input {
+.form-group input,
+.form-group select {
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  box-sizing: border-box;
+  /* Ensures padding doesn't affect width */
   font-size: 14px;
+  background-color: white;
+}
+
+.location-row {
+  display: flex;
+  gap: 10px;
+}
+
+.location-row select {
+  flex: 1;
 }
 
 .form-group input:focus {
