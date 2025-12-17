@@ -1,193 +1,240 @@
-<!doctype html>
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+  <head>
+    <title>Register - Cognizant</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" th:href="@{/css/login.css}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-  <title>Register - Cognizant</title>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" th:href="@{/css/login.css}" />
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-</head>
+  <body>
+    <div class="login-container">
+      <div class="login-header">
+        <h2>Welcome</h2>
+        <p>Create an account to continue</p>
+      </div>
+      <form id="registerForm" class="login-form">
+        <div
+          id="errorMessage"
+          class="alert alert-error"
+          style="display: none"
+        ></div>
+        <div
+          id="successMessage"
+          class="alert alert-success"
+          style="display: none"
+        ></div>
 
-<body>
-  <div class="login-container">
-    <div class="login-header">
-      <h2>Welcome</h2>
-      <p>Create an account to continue</p>
-    </div>
-    <form id="registerForm" class="login-form">
-      <div id="errorMessage" class="alert alert-error" style="display: none"></div>
-      <div id="successMessage" class="alert alert-success" style="display: none"></div>
-
-      <div class="form-group">
-        <label for="userName">Username</label>
-        <input type="text" id="userName" name="userName" placeholder="Enter your username" required autofocus />
-      </div>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Enter your email" required />
-      </div>
-      <div class="form-group">
-        <label for="phoneNumber">Phone Number</label>
-        <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="Enter your phone number" required />
-      </div>
-      <div class="form-group">
-        <label for="role">Role</label>
-        <input type="text" id="role" name="role" placeholder="Enter your role" required />
-      </div>
-      <div class="form-group">
-        <label for="department">Department</label>
-        <input type="text" id="department" name="department" placeholder="Enter your department" required />
-      </div>
-      <div class="form-group">
-        <label>Office Location</label>
-        <div class="location-row">
-          <select id="countrySelect" required>
-            <option value="" disabled selected>Country</option>
-          </select>
-          <select id="citySelect" required disabled>
-            <option value="" disabled selected>City</option>
-          </select>
-          <select id="officeSelect" required disabled>
-            <option value="" disabled selected>Office</option>
-          </select>
+        <div class="form-group">
+          <label for="userName">Username</label>
+          <input
+            type="text"
+            id="userName"
+            name="userName"
+            placeholder="Enter your username"
+            required
+            autofocus
+          />
         </div>
-        <input type="hidden" id="locationId" name="locationId" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" placeholder="Enter your password" required />
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn-primary">Register</button>
-      </div>
-    </form>
-    <script th:inline="javascript">
-      // Serialize locations data from Thymeleaf to JavaScript
-      const allLocations = [(${ locations })];
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="role">Role</label>
+          <input
+            type="text"
+            id="role"
+            name="role"
+            placeholder="Enter your role"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input
+            type="text"
+            id="department"
+            name="department"
+            placeholder="Enter your department"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label>Office Location</label>
+          <div class="location-row">
+            <select id="countrySelect" required>
+              <option value="" disabled selected>Country</option>
+            </select>
+            <select id="citySelect" required disabled>
+              <option value="" disabled selected>City</option>
+            </select>
+            <select id="officeSelect" required disabled>
+              <option value="" disabled selected>Office</option>
+            </select>
+          </div>
+          <input type="hidden" id="locationId" name="locationId" required />
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Register</button>
+        </div>
+      </form>
+      <script th:inline="javascript">
+        // Serialize locations data from Thymeleaf to JavaScript
+        const allLocations = [(${ locations })];
 
-      const countrySelect = document.getElementById("countrySelect");
-      const citySelect = document.getElementById("citySelect");
-      const officeSelect = document.getElementById("officeSelect");
-      const locationIdInput = document.getElementById("locationId");
+        const countrySelect = document.getElementById("countrySelect");
+        const citySelect = document.getElementById("citySelect");
+        const officeSelect = document.getElementById("officeSelect");
+        const locationIdInput = document.getElementById("locationId");
 
-      // Populate Countries
-      const countries = [...new Set(allLocations.map(l => l.country))];
-      countries.forEach(country => {
-        const option = document.createElement("option");
-        option.value = country;
-        option.textContent = country;
-        countrySelect.appendChild(option);
-      });
-
-      // Handle Country Change
-      countrySelect.addEventListener("change", () => {
-        const selectedCountry = countrySelect.value;
-
-        // Reset City and Office
-        citySelect.innerHTML = '<option value="" disabled selected>City</option>';
-        officeSelect.innerHTML = '<option value="" disabled selected>Office</option>';
-        citySelect.disabled = false;
-        officeSelect.disabled = true;
-        locationIdInput.value = "";
-
-        // Filter Cities
-        const cities = [...new Set(allLocations
-          .filter(l => l.country === selectedCountry)
-          .map(l => l.city))];
-
-        cities.forEach(city => {
+        // Populate Countries
+        const countries = [...new Set(allLocations.map(l => l.country))];
+        countries.forEach(country => {
           const option = document.createElement("option");
-          option.value = city;
-          option.textContent = city;
-          citySelect.appendChild(option);
+          option.value = country;
+          option.textContent = country;
+          countrySelect.appendChild(option);
         });
-      });
 
-      // Handle City Change
-      citySelect.addEventListener("change", () => {
-        const selectedCountry = countrySelect.value;
-        const selectedCity = citySelect.value;
+        // Handle Country Change
+        countrySelect.addEventListener("change", () => {
+          const selectedCountry = countrySelect.value;
 
-        // Reset Office
-        officeSelect.innerHTML = '<option value="" disabled selected>Office</option>';
-        officeSelect.disabled = false;
-        locationIdInput.value = "";
+          // Reset City and Office
+          citySelect.innerHTML = '<option value="" disabled selected>City</option>';
+          officeSelect.innerHTML = '<option value="" disabled selected>Office</option>';
+          citySelect.disabled = false;
+          officeSelect.disabled = true;
+          locationIdInput.value = "";
 
-        // Filter Offices
-        const offices = allLocations.filter(l => l.country === selectedCountry && l.city === selectedCity);
+          // Filter Cities
+          const cities = [...new Set(allLocations
+            .filter(l => l.country === selectedCountry)
+            .map(l => l.city))];
 
-        offices.forEach(loc => {
-          const option = document.createElement("option");
-          option.value = loc.locationId; // Use locationId as value for office select
-          option.textContent = loc.office;
-          officeSelect.appendChild(option);
+          cities.forEach(city => {
+            const option = document.createElement("option");
+            option.value = city;
+            option.textContent = city;
+            citySelect.appendChild(option);
+          });
         });
-      });
 
-      // Handle Office Change
-      officeSelect.addEventListener("change", () => {
-        locationIdInput.value = officeSelect.value;
-      });
+        // Handle City Change
+        citySelect.addEventListener("change", () => {
+          const selectedCountry = countrySelect.value;
+          const selectedCity = citySelect.value;
 
-      document
-        .getElementById("registerForm")
-        .addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const userName = document.getElementById("userName").value;
-          const email = document.getElementById("email").value;
-          const phoneNumber = document.getElementById("phoneNumber").value;
-          const role = document.getElementById("role").value;
-          const department = document.getElementById("department").value;
-          const locationId = document.getElementById("locationId").value;
-          const password = document.getElementById("password").value;
-          const errorDiv = document.getElementById("errorMessage");
-          const successDiv = document.getElementById("successMessage");
+          // Reset Office
+          officeSelect.innerHTML = '<option value="" disabled selected>Office</option>';
+          officeSelect.disabled = false;
+          locationIdInput.value = "";
 
-          errorDiv.style.display = "none";
-          successDiv.style.display = "none";
+          // Filter Offices
+          const offices = allLocations.filter(l => l.country === selectedCountry && l.city === selectedCity);
 
-          try {
-            const response = await fetch("/auth/register", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                userName,
-                email,
-                phoneNumber,
-                role,
-                department,
-                locationId,
-                password,
-              }),
-            });
+          offices.forEach(loc => {
+            const option = document.createElement("option");
+            option.value = loc.locationId; // Use locationId as value for office select
+            option.textContent = loc.office;
+            officeSelect.appendChild(option);
+          });
+        });
 
-            if (response.ok) {
-              successDiv.textContent =
-                "Registration successful! Redirecting to homepage...";
-              successDiv.style.display = "block";
-              setTimeout(
-                () =>
-                (window.location.href =
-                  '[[${@environment.getProperty("app.frontend.url")}]]'),
-                2000,
-              );
-            } else {
-              const data = await response.json();
-              errorDiv.textContent =
-                data.message || "Registration failed. Please try again.";
+        // Handle Office Change
+        officeSelect.addEventListener("change", () => {
+          locationIdInput.value = officeSelect.value;
+        });
+
+        document
+          .getElementById("registerForm")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const userName = document.getElementById("userName").value;
+            const email = document.getElementById("email").value;
+            const phoneNumber = document.getElementById("phoneNumber").value;
+            const role = document.getElementById("role").value;
+            const department = document.getElementById("department").value;
+            const locationId = document.getElementById("locationId").value;
+            const password = document.getElementById("password").value;
+            const errorDiv = document.getElementById("errorMessage");
+            const successDiv = document.getElementById("successMessage");
+
+            errorDiv.style.display = "none";
+            successDiv.style.display = "none";
+
+            try {
+              const response = await fetch("/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  userName,
+                  email,
+                  phoneNumber,
+                  role,
+                  department,
+                  locationId,
+                  password,
+                }),
+              });
+
+              if (response.ok) {
+                successDiv.textContent =
+                  "Registration successful! Redirecting to homepage...";
+                successDiv.style.display = "block";
+                const frontendUrlRaw = '[[${@environment.getProperty("app.frontend.url")}]]';
+                const frontendUrl = (frontendUrlRaw || "").replace(/^\s*[\"']|[\"']\s*$/g, "");
+                setTimeout(
+                  () =>
+                  (window.location.href = frontendUrl),
+                  2000,
+                );
+              } else {
+                const data = await response.json();
+                errorDiv.textContent =
+                  data.message || "Registration failed. Please try again.";
+                errorDiv.style.display = "block";
+              }
+            } catch (error) {
+              errorDiv.textContent = "An error occurred. Please try again.";
               errorDiv.style.display = "block";
             }
-          } catch (error) {
-            errorDiv.textContent = "An error occurred. Please try again.";
-            errorDiv.style.display = "block";
-          }
-        });
-    </script>
-    <div class="login-footer">
-      <p>Cognizant game app</p>
+          });
+      </script>
+      <div class="login-footer">
+        <p>Cognizant game app</p>
+      </div>
     </div>
-  </div>
-</body>
-
+  </body>
 </html>
