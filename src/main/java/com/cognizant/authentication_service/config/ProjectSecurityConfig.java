@@ -134,7 +134,8 @@ public class ProjectSecurityConfig {
                 .clientSettings(
                         ClientSettings
                                 .builder()
-                                .requireAuthorizationConsent(true)
+                // Disable consent screen entirely (auto-approve requested scopes)
+                .requireAuthorizationConsent(false)
                                 .build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofHours(1))
