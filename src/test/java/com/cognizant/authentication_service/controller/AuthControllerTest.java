@@ -39,6 +39,7 @@ class AuthControllerTest {
     @Test
     void register_shouldReturnCreatedUser() {
         UserRegisterRequestDTO request = UserRegisterRequestDTO.builder()
+            .userId(1234567890L)
                 .userName("john")
                 .email("john.doe@test.com")
                 .phoneNumber("9999999999")

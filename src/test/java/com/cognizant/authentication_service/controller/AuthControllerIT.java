@@ -26,6 +26,7 @@ class AuthControllerIT {
     @Test
     void register_returnsCreatedOrBadRequest() throws Exception {
         String requestJson = "{" +
+            "\"userId\":1234567890," +
                 "\"userName\":\"john\"," +
                 "\"email\":\"john.doe@test.com\"," +
                 "\"phoneNumber\":\"9999999999\"," +

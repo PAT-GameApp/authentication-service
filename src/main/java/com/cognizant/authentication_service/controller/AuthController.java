@@ -19,6 +19,8 @@ import com.cognizant.authentication_service.dto.UserRegisterRequestDTO;
 import com.cognizant.authentication_service.dto.UserRegisterResponseDTO;
 import com.cognizant.authentication_service.entity.User;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -30,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRegisterRequestDTO request) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserRegisterRequestDTO request) {
         UserRegisterResponseDTO user = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }

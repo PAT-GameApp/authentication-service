@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class UserRegisterClientRequestDTO {
+    private Long userId;
     private String userName;
     private String email;
     private String phoneNumber;

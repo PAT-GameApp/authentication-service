@@ -38,6 +38,7 @@ public class UserService implements UserDetailsService {
         // feign call to create user entity in user service
         UserRegisterClientResponseDTO userServiceResponse = userServiceFeign.createUser(
                 UserRegisterClientRequestDTO.builder()
+                        .userId(request.getUserId())
                         .userName(request.getUserName())
                         .email(request.getEmail())
                         .phoneNumber(request.getPhoneNumber())
